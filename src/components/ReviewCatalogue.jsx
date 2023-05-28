@@ -10,7 +10,7 @@ const ReviewCatalogue = ({ setIsReviewOpen, setReviewContent }) => {
 
   const handleFetchClassReviews = async () => {
     await axios
-      .get(`http://localhost:5004/review/class/${id}`)
+      .get(`http://localhost:8000/reviews/class/${id}`)
       .then((res) => {
         setReviews(res.data);
       })
@@ -23,15 +23,16 @@ const ReviewCatalogue = ({ setIsReviewOpen, setReviewContent }) => {
     handleFetchClassReviews();
   }, []);
   return (
-    <>
+    <div>
       {reviews?.length !== 0 ? (
-        <div className="grid items-center gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 items-center gap-2 md:grid-cols-2 lg:grid-cols-3">
           {reviews?.map((review) => {
             return (
               <ReviewCard
                 setIsReviewOpen={setIsReviewOpen}
                 key={review["_id"]["$oid"]}
                 review={review}
+                userId={review.userId}
                 setReviewContent={setReviewContent}
               />
             );
@@ -40,14 +41,11 @@ const ReviewCatalogue = ({ setIsReviewOpen, setReviewContent }) => {
       ) : (
         <div className=" flex items-center justify-center py-10 text-center text-gray-700 ">
           <h1 className="text-2xl font-medium leading-tight tracking-tight dark:text-gray-200">
-            No reviews yet! Write a{" "}
-            <span className="bg-gradient-to-r from-blue-800 to-blue-400 bg-clip-text text-transparent hover:cursor-alias">
-              Review
-            </span>
+            No reviews yet!
           </h1>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

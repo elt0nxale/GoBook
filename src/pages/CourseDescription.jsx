@@ -19,11 +19,23 @@ const CourseDescription = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [reviewContent, setReviewContent] = useState(null);
+  const [userClasses, setUserClasses] = useState();
   const handleFetchCourseDescription = async (codeResponse) => {
     await axios
-      .get(`http://localhost:5006/class/${id}`)
+      .get(`http://localhost:8000/classes/${id}`)
       .then((res) => {
         setCourseDesc(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleFetchUserData = async () => {
+    await axios
+      //configured api route to localhost:5006 for mac
+      .get(`http://localhost:8000/users/${state["_id"]}`)
+      .then((res) => {
+        setUserClasses(res.data["attended_classes"]);
       })
       .catch((err) => {
         console.log(err);
@@ -32,31 +44,40 @@ const CourseDescription = () => {
 
   useEffect(() => {
     handleFetchCourseDescription();
+    handleFetchUserData();
+    console.log(id.toString());
+    // console.log(state);
   }, []);
   useEffect(() => {
-    console.log("🚀 reviewContent:", reviewContent);
-  }, [reviewContent]);
+    console.log(userClasses);
+  }, [userClasses]);
   return (
     <Layout user={state}>
       <section
         ref={parent}
         className="mt-2  w-full  rounded-lg  border border-gray-200 bg-gray-50 shadow dark:border-gray-700 dark:bg-gray-800 lg:p-10"
       >
-        {courseDesc ? (
+        {courseDesc && userClasses ? (
           <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6">
             <div className="items-center justify-between md:flex">
               <h1 className="my-5 w-full text-center text-3xl font-extrabold leading-tight tracking-tight text-blue-700 dark:text-blue-600 md:mb-10 md:w-[85%] md:text-start lg:text-5xl">
                 {name.replace(/-/g, " ")}
               </h1>
               <div className="mt-5 text-center md:mb-10 md:text-end">
-                {selectedBooking ? (
+                {selectedBooking && !userClasses.includes(id.toString()) ? (
                   <Button
                     name="Book"
                     color="green"
                     onClick={() => setIsModalOpen(true)}
                   />
                 ) : (
-                  <Button name="Book" color="disabled" />
+                  <div className="flex flex-col items-center justify-center">
+                    {userClasses?.includes(id.toString()) ? (
+                      <Button name="Class Booked" color="disabled" />
+                    ) : (
+                      <Button name="Book" color="disabled" />
+                    )}
+                  </div>
                 )}
               </div>
             </div>
@@ -125,7 +146,7 @@ const CourseDescription = () => {
               <h5 className="mb-2 text-center text-2xl font-semibold tracking-tight text-gray-900  dark:text-white md:text-start ">
                 Reviews{" "}
               </h5>
-              <div className=" text-lg font-light leading-relaxed tracking-wide  text-gray-700 dark:text-gray-400 md:text-start ">
+              <div className=" flex justify-center text-lg font-light leading-relaxed tracking-wide  text-gray-700 dark:text-gray-400 md:text-start ">
                 <ReviewCatalogue
                   setIsReviewOpen={setIsReviewOpen}
                   classId={id}

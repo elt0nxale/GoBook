@@ -12,7 +12,7 @@ const CourseCatalogue = ({ user }) => {
   const handleFetchClassData = async (codeRes) => {
     await axios
       //configured api route to localhost:5006 for mac
-      .get("http://localhost:5006/class")
+      .get("http://localhost:8000/classes")
       .then((res) => {
         setCourseData(res.data);
       })
@@ -23,6 +23,8 @@ const CourseCatalogue = ({ user }) => {
   useEffect(() => {
     handleFetchClassData();
   }, []);
+  useEffect(() => {
+  }, [courseData]);
   return (
     <section className="mt-2  w-full rounded-lg border  border-gray-200 bg-gray-50 py-5 shadow dark:border-gray-700 dark:bg-gray-800 md:p-10">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -41,7 +43,7 @@ const CourseCatalogue = ({ user }) => {
                 .filter((course) => {
                   if (input === "") return course;
                   else {
-                    return course.className.toLowerCase().includes(input);
+                    return course.coursename.toLowerCase().includes(input);
                   }
                 })
                 .map((course) => {

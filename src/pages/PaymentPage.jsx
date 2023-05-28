@@ -4,7 +4,6 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../components/CheckoutForm";
 import Layout from "../components/Layout";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const stripePromise = loadStripe(
   "pk_test_51MkznJJTqG9NvRuTCvhU1y4RyggSstQYI2woG0L2DQywIKMFmvYVSqyS6uwHfCsK1mdv5Nvo6KP1NzAnR0wlukX900AB3llvRf"
@@ -12,8 +11,6 @@ const stripePromise = loadStripe(
 
 export default function PaymentPage() {
   const [clientSecret, setClientSecret] = useState();
-  const [parent, enableAnimations] = useAutoAnimate({ duration: 200 });
-
   const data = useLocation().state;
 
   useEffect(() => {
@@ -46,15 +43,12 @@ export default function PaymentPage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setClientSecret(data.clientSecret);
       });
-
-    console.log(data);
   }
 
   const appearance = {
-    theme: "stripe",
+    theme: "night",
   };
   const options = {
     clientSecret,
@@ -64,19 +58,16 @@ export default function PaymentPage() {
     makePayment();
   }, []);
   useEffect(() => {
-    console.log(clientSecret);
   }, [clientSecret]);
   return (
     <>
       {data ? (
-        <Layout user={data[1]} ref={parent}>
-          <div
-            class="mx-auto mt-10 max-w-xl rounded-xl bg-blue-200 p-10"
-            ref={parent}
-          >
+        <Layout user={data[1]}>
+          <div className="mx-auto mt-10 max-w-xl rounded-xl bg-slate-900 p-10">
+            <h1 className="pb-5 font-bold text-white">Make Payment</h1>
             {clientSecret && (
               <Elements options={options} stripe={stripePromise}>
-                <CheckoutForm />
+                <CheckoutForm userData={data[0]} clientSecret={clientSecret} />
               </Elements>
             )}
           </div>

@@ -12,7 +12,6 @@ import {
 } from "react-icons/hi2";
 const BookingForm = ({ setIsModalOpen, selectedBooking, courseDesc }) => {
   const userDetails = useLocation().state;
-  console.log(courseDesc, selectedBooking);
   return (
     <div className="fixed inset-0 z-10 overflow-y-auto">
       <div
@@ -34,7 +33,7 @@ const BookingForm = ({ setIsModalOpen, selectedBooking, courseDesc }) => {
           </div>
           <div className="py-5 px-4 md:px-10">
             <h1 className="mb-2 w-full text-start text-xl font-semibold  text-blue-700 dark:text-blue-600 ">
-              {courseDesc.className.replace(/-/g, " ")}
+              {courseDesc.coursename.replace(/-/g, " ")}
             </h1>
             <div className="gap-y-2 text-sm">
               <div className="py-5">
@@ -87,12 +86,12 @@ const BookingForm = ({ setIsModalOpen, selectedBooking, courseDesc }) => {
                   userEmail: userDetails.email,
                   userName: userDetails.given_name,
                   orderID: uuid(),
-                  courseName: courseDesc.className.replace(/-/g, " "),
+                  coursename: courseDesc.coursename.replace(/-/g, " "),
                   coursePrice: courseDesc.fees,
-                  courseDescription: courseDesc.content,
+                  courseDescription: courseDesc.content.slice(0, 10),
                   classID: Number(courseDesc["_id"]),
                   runID: Number(selectedBooking[0]),
-                  userID: userDetails.id,
+                  userID: userDetails["_id"],
                 },
                 userDetails,
               ]}
@@ -100,7 +99,6 @@ const BookingForm = ({ setIsModalOpen, selectedBooking, courseDesc }) => {
               <Button
                 name="Proceed to Payment"
                 color="green"
-                // onClick={() => setIsModalOpen(false)}
               />
             </Link>
             <Button
