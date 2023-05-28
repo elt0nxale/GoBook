@@ -6,8 +6,6 @@ import Courses from "../pages/Courses";
 import PaymentPage from "../pages/PaymentPage";
 import ProfilePage from "../pages/ProfilePage";
 import CourseDescription from "../pages/CourseDescription";
-import TestPurchase from "../components/TestPurchase";
-
 import ConfirmationPage from "../pages/ConfirmationPage";
 
 const AppRoutes = () => (
