@@ -13,6 +13,27 @@ export default function PaymentPage() {
   const [clientSecret, setClientSecret] = useState();
   const data = useLocation().state;
 
+  useEffect(() => {
+    const socket = io("http://localhost:5010");
+
+    socket.on("connect", () => {
+      console.log("WebSocket connection opened");
+    });
+
+    socket.on("disconnect", () => {
+      console.log("WebSocket connection closed");
+    });
+
+    socket.on("message", (data) => {
+      console.log("Received message:", data);
+      // Update the React state or UI based on the message data
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   function makePayment() {
     fetch("http://localhost:5008/booking/createPayment", {
       method: "POST",
